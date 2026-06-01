@@ -1,0 +1,9 @@
+{
+    "name": "dpmc-system",
+    "version": "1.0.0",
+    "scripts": {
+        "frontend": "cd dpmc-frontend && npm run dev",
+        "backend": "cd dpmc-backend && npm run dev",
+        "dev": "npm run frontend & npm run backend"
+    }
+}
