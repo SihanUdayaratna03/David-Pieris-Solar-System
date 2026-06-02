@@ -15,6 +15,7 @@ export default function Generate() {
   const [apiError, setApiError]     = useState('');
   const [copiedId, setCopiedId]     = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [generatedRecord, setGeneratedRecord] = useState(null);
 
   // ── Fetch all saved records from the DB ─────────────────────────────────────
   const fetchRecords = useCallback(async () => {
@@ -67,6 +68,7 @@ export default function Generate() {
       }
       const saved = await res.json();
       setRecords(prev => [saved, ...prev]);
+      setGeneratedRecord(saved);
       setName('');
       setIdNumber('');
     } catch (err) {
@@ -133,62 +135,108 @@ export default function Generate() {
         </div>
       )}
 
-      <div className="grid-cols-2" style={{ gap: '2rem', alignItems: 'flex-start' }}>
+      <div className="main-grid">
 
-        {/* ── Form ───────────────────────────────────────────────────────────── */}
-        <div className="card shadow-sm" style={{ padding: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, margin: '0 0 1.5rem 0' }}>Generate New Code</h2>
-
-          {error && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', backgroundColor: 'hsla(var(--destructive), 0.1)', color: 'hsl(var(--destructive))', borderRadius: 'var(--radius)', marginBottom: '1.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-              <AlertCircle size={18} />
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleGenerate} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div>
-              <label className="label">Depositor Full Name <span style={{ color: 'hsl(var(--destructive))' }}>*</span></label>
-              <input
-                id="input-name"
-                type="text"
-                className={`input ${error && !name.trim() ? 'error' : ''}`}
-                placeholder=""
-                value={name}
-                onChange={(e) => { setName(e.target.value); if (error) setError(''); }}
-                disabled={saving}
-              />
-            </div>
-            <div>
-              <label className="label">National ID Number <span style={{ color: 'hsl(var(--destructive))' }}>*</span></label>
-              <input
-                id="input-id"
-                type="text"
-                className={`input ${error && idNumber.length < 5 ? 'error' : ''}`}
-                placeholder=""
-                value={idNumber}
-                onChange={(e) => { setIdNumber(e.target.value); if (error) setError(''); }}
-                disabled={saving}
-              />
-              <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', marginTop: '0.25rem' }}>
-                Must be a valid National ID (at least 5 characters).
+        {/* ── Left Column: Form or Result Display ───────────────────────────────── */}
+        <div className="table-card" style={{ padding: '2rem' }}>
+          {generatedRecord ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'hsla(var(--secondary), 0.1)', color: 'hsl(var(--secondary))', display: 'flex', alignItems: 'center', justify: 'center', marginBottom: '1rem' }}>
+                <Check size={28} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 0.5rem 0', color: 'hsl(var(--foreground))' }}>Code Generated!</h3>
+              <p style={{ fontSize: '0.875rem', color: 'hsl(var(--muted-foreground))', margin: '0 0 1.5rem 0' }}>
+                Depositor: <strong style={{ color: 'hsl(var(--foreground))' }}>{generatedRecord.name}</strong><br/>
+                National ID: <span style={{ fontFamily: 'monospace' }}>{generatedRecord.id_number}</span>
               </p>
+
+              {/* Big Visual Code Box */}
+              <div style={{ width: '100%', backgroundColor: 'hsla(var(--primary), 0.05)', border: '1px dashed hsla(var(--primary), 0.3)', borderRadius: 'var(--radius)', padding: '1.5rem', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+                <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'hsl(var(--muted-foreground))', fontWeight: 600 }}>Tracking Code</span>
+                <div style={{ fontSize: '2.25rem', fontWeight: 800, fontFamily: 'monospace', color: 'hsl(var(--primary))', letterSpacing: '2px' }}>
+                  {generatedRecord.code}
+                </div>
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem', backgroundColor: '#fff', borderRadius: '4px', border: '1px solid hsl(var(--border))' }}>
+                  <Barcode value={generatedRecord.code} height={44} width={1.4} />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                <button 
+                  type="button"
+                  className="btn btn-outline" 
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} 
+                  onClick={() => handleCopy(generatedRecord.code, 'new')}
+                >
+                  {copiedId === 'new' ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Code</>}
+                </button>
+                <button 
+                  type="button"
+                  className="btn btn-primary" 
+                  style={{ flex: 1 }} 
+                  onClick={() => { setGeneratedRecord(null); }}
+                >
+                  Generate Another
+                </button>
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-              <button type="button" className="btn btn-outline" style={{ flex: 1 }} onClick={handleClearForm} disabled={saving}>
-                Clear
-              </button>
-              <button id="btn-generate" type="submit" className="btn btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} disabled={saving}>
-                {saving
-                  ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
-                  : <><Plus size={18} /> Generate &amp; Save</>}
-              </button>
-            </div>
-          </form>
+          ) : (
+            <>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 1.5rem 0', color: 'hsl(var(--foreground))' }}>Generate New Code</h2>
+
+              {error && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', backgroundColor: 'hsla(var(--destructive), 0.1)', color: 'hsl(var(--destructive))', borderRadius: 'var(--radius)', marginBottom: '1.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+                  <AlertCircle size={18} />
+                  {error}
+                </div>
+              )}
+
+              <form onSubmit={handleGenerate} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div>
+                  <label className="label">Depositor Full Name <span style={{ color: 'hsl(var(--destructive))' }}>*</span></label>
+                  <input
+                    id="input-name"
+                    type="text"
+                    className={`input ${error && !name.trim() ? 'error' : ''}`}
+                    placeholder=""
+                    value={name}
+                    onChange={(e) => { setName(e.target.value); if (error) setError(''); }}
+                    disabled={saving}
+                  />
+                </div>
+                <div>
+                  <label className="label">National ID Number <span style={{ color: 'hsl(var(--destructive))' }}>*</span></label>
+                  <input
+                    id="input-id"
+                    type="text"
+                    className={`input ${error && idNumber.length < 5 ? 'error' : ''}`}
+                    placeholder=""
+                    value={idNumber}
+                    onChange={(e) => { setIdNumber(e.target.value); if (error) setError(''); }}
+                    disabled={saving}
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'hsl(var(--muted-foreground))', marginTop: '0.25rem' }}>
+                    Must be a valid National ID (at least 5 characters).
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+                  <button type="button" className="btn btn-outline" style={{ flex: 1 }} onClick={handleClearForm} disabled={saving}>
+                    Clear
+                  </button>
+                  <button id="btn-generate" type="submit" className="btn btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} disabled={saving}>
+                    {saving
+                      ? <><RefreshCw size={16} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
+                      : <><Plus size={18} /> Generate &amp; Save</>}
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </div>
 
         {/* ── Records Table ─────────────────────────────────────────────────── */}
-        <div className="card shadow-sm" style={{ padding: '1.5rem' }}>
+        <div className="table-card">
           <div className="flex-between" style={{ marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Database size={16} style={{ color: 'hsl(var(--muted-foreground))' }} />
@@ -222,7 +270,7 @@ export default function Generate() {
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
-              <table className="table">
+              <table className="table-large">
                 <thead>
                   <tr>
                     <th style={{ width: '3rem' }}>#</th>
@@ -238,12 +286,9 @@ export default function Generate() {
                       <td style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.75rem' }}>{record.id}</td>
                       <td style={{ fontWeight: 500 }}>{record.name}</td>
                       <td>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', alignItems: 'flex-start' }}>
-                          <code style={{ fontSize: '0.875rem', padding: '0.25rem 0.5rem', backgroundColor: 'hsla(var(--primary), 0.1)', color: 'hsl(var(--primary))', borderRadius: '0.25rem', fontFamily: 'monospace', fontWeight: 600 }}>
-                            {record.code}
-                          </code>
-                          <Barcode value={record.code} height={24} width={1.0} />
-                        </div>
+                        <code style={{ fontSize: '0.875rem', padding: '0.25rem 0.5rem', backgroundColor: 'hsla(var(--primary), 0.1)', color: 'hsl(var(--primary))', borderRadius: '0.25rem', fontFamily: 'monospace', fontWeight: 600 }}>
+                          {record.code}
+                        </code>
                       </td>
                       <td style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
                         {formatDate(record.created_at)}

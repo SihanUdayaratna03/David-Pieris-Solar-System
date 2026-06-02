@@ -414,3 +414,54 @@ body {
 .flex-between { display: flex; align-items: center; justify-content: space-between; }
 .grid-cols-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 768px) { .grid-cols-2 { grid-template-columns: 1fr; } }
+
+/* --- CUSTOM ADDITIONS FOR MAIN LAYOUT & TABLES --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 4.5fr 7.5fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 992px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.table-card {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  /* A beautiful, prominent shadow effect */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  padding: 2rem !important; /* Larger padding for a more spacious feel */
+}
+
+/* Make table larger and more readable */
+.table-large {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem; /* Larger font size */
+}
+
+.table-large th, .table-large td {
+  padding: 1rem 1.25rem; /* Larger padding */
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.table-large th {
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  background-color: hsl(var(--muted));
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-large tr:last-child td {
+  border-bottom: none;
+}
+
