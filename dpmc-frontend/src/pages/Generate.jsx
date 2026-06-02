@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Copy, Check, Plus, AlertCircle, Trash2, RefreshCw, Database } from 'lucide-react';
+import Barcode from '../components/Barcode';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -152,7 +153,7 @@ export default function Generate() {
                 id="input-name"
                 type="text"
                 className={`input ${error && !name.trim() ? 'error' : ''}`}
-                placeholder="e.g. Sihan Perera"
+                placeholder=""
                 value={name}
                 onChange={(e) => { setName(e.target.value); if (error) setError(''); }}
                 disabled={saving}
@@ -164,7 +165,7 @@ export default function Generate() {
                 id="input-id"
                 type="text"
                 className={`input ${error && idNumber.length < 5 ? 'error' : ''}`}
-                placeholder="e.g. 200434100891"
+                placeholder=""
                 value={idNumber}
                 onChange={(e) => { setIdNumber(e.target.value); if (error) setError(''); }}
                 disabled={saving}
@@ -237,9 +238,12 @@ export default function Generate() {
                       <td style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.75rem' }}>{record.id}</td>
                       <td style={{ fontWeight: 500 }}>{record.name}</td>
                       <td>
-                        <code style={{ fontSize: '0.875rem', padding: '0.25rem 0.5rem', backgroundColor: 'hsla(var(--primary), 0.1)', color: 'hsl(var(--primary))', borderRadius: '0.25rem' }}>
-                          {record.code}
-                        </code>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', alignItems: 'flex-start' }}>
+                          <code style={{ fontSize: '0.875rem', padding: '0.25rem 0.5rem', backgroundColor: 'hsla(var(--primary), 0.1)', color: 'hsl(var(--primary))', borderRadius: '0.25rem', fontFamily: 'monospace', fontWeight: 600 }}>
+                            {record.code}
+                          </code>
+                          <Barcode value={record.code} height={24} width={1.0} />
+                        </div>
                       </td>
                       <td style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
                         {formatDate(record.created_at)}
