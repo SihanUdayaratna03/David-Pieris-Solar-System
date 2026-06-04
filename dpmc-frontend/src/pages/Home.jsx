@@ -80,7 +80,7 @@ export default function Home() {
       <div className="container" style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
 
         {/* ── 1. Floating Logo Orb with Pulsing Sun Glow ── */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', marginTop: '4rem', position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', marginTop: '9rem', position: 'relative' }}>
           <div className="logo-orb-wrap" style={{ width: '240px', height: '240px', marginBottom: 0 }}>
             <div className="logo-orb-ring" style={{ inset: '-14px', borderColor: 'var(--dpmc-blue)' }} />
             <div className="logo-orb-ring-2" style={{ inset: '-32px', borderColor: '#f59e0b' }} /> {/* Solar Gold Ring */}
@@ -98,7 +98,7 @@ export default function Home() {
         </div>
 
         {/* ── 2. Solar Status Badge ── */}
-        <div className="badge" style={{ marginBottom: '1.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.45rem 1rem', background: 'linear-gradient(135deg, rgba(26,95,180,0.06) 0%, rgba(245,158,11,0.06) 100%)', borderColor: 'rgba(245,158,11,0.25)' }}>
+        <div className="badge" style={{ marginTop: '2rem', marginBottom: '1.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.45rem 1rem', background: 'linear-gradient(135deg, rgba(26,95,180,0.06) 0%, rgba(245,158,11,0.06) 100%)', borderColor: 'rgba(245,158,11,0.25)' }}>
           <Sun size={14} style={{ color: '#f59e0b', animation: 'spin-slow 15s linear infinite' }} />
           <span style={{ color: '#1a5fb4', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
             David Pieris Solar Energy
