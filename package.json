@@ -1,9 +1,14 @@
 {
-    "name": "dpmc-system",
-    "version": "1.0.0",
-    "scripts": {
-        "frontend": "cd dpmc-frontend && npm run dev",
-        "backend": "cd dpmc-backend && npm run dev",
-        "dev": "npm run frontend & npm run backend"
-    }
+  "name": "dpmc-system",
+  "version": "1.0.0",
+  "description": "David Pieris Solar Energy Deposit Code Generator – monorepo root",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --names \"BACKEND,FRONTEND\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" \"npm run dev --prefix dpmc-backend\" \"npm run dev --prefix dpmc-frontend\"",
+    "backend": "npm run dev --prefix dpmc-backend",
+    "frontend": "npm run dev --prefix dpmc-frontend",
+    "install:all": "npm install --prefix dpmc-backend && npm install --prefix dpmc-frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
 }

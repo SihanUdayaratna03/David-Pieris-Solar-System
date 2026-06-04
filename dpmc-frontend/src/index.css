@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
   /* DPMC Brand Colors - exact hex values from the logo */
   --dpmc-blue: #1a5fb4;
@@ -31,7 +33,6 @@
   --radius: 0.5rem;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 * {
   box-sizing: border-box;
@@ -88,11 +89,22 @@ body {
   position: relative;
   min-height: calc(100vh - 4rem);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: linear-gradient(160deg, #ffffff 0%, #eef4ff 50%, #e8f5e9 100%);
 }
+
+/* Hide preview card on medium/small screens */
+.hero-preview-card {
+  display: block;
+}
+@media (max-width: 1100px) {
+  .hero-preview-card { display: none; }
+  .hero-bg .container { grid-template-columns: 1fr !important; }
+}
+
 
 .hero-bg::before {
   content: '';
@@ -465,3 +477,76 @@ body {
   border-bottom: none;
 }
 
+/* ── TABLE ROW HOVER ── */
+.table-large tbody tr:hover td {
+  background-color: hsl(var(--muted));
+  transition: background-color 0.15s ease;
+}
+
+/* ── UTILITY CLASSES (used by PreviewCard & misc components) ── */
+.relative  { position: relative; }
+.mt-4  { margin-top: 1rem; }
+.mt-6  { margin-top: 1.5rem; }
+.mt-8  { margin-top: 2rem; }
+.gap-4 { gap: 1rem; }
+
+.grid-cols-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Glass card style */
+.bg-glass {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(26, 95, 180, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Brand gradient background (used in PreviewCard code box) */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--dpmc-blue) 0%, var(--dpmc-blue-dark) 100%);
+  color: #fff;
+}
+
+/* Box shadow variants */
+.shadow-brand {
+  box-shadow: 0 8px 32px rgba(26, 95, 180, 0.18), 0 2px 8px rgba(26, 95, 180, 0.1);
+}
+.shadow-soft {
+  box-shadow: 0 4px 16px rgba(26, 95, 180, 0.15);
+}
+
+/* Slow spin animation class */
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* ── SCROLLBAR STYLING ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(26,95,180,0.2); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26,95,180,0.35); }
+
+/* ── NOTIFICATION / TOAST ── */
+.toast-success {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 1px solid rgba(46,125,50,0.25);
+  border-radius: var(--radius);
+  color: #166534;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(46,125,50,0.12);
+  animation: fade-in-up 0.3s ease both;
+}
+
+/* ── PRINT STYLES ── */
+@media print {
+  header, footer, .btn, button { display: none !important; }
+  body { background: #fff !important; }
+  .table-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+}

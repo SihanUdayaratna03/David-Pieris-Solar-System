@@ -1,0 +1,30 @@
+# Root .gitignore for dpmc-system monorepo
+
+# Environment files (never commit these)
+.env
+.env.local
+.env.*.local
+
+# Node modules (each package has its own)
+node_modules/
+dpmc-backend/node_modules/
+dpmc-frontend/node_modules/
+
+# Build output
+dpmc-frontend/dist/
+
+# Database (runtime artifact — use persistent volume in prod)
+dpmc-database/dpmc.db
+dpmc-database/dpmc.db-shm
+dpmc-database/dpmc.db-wal
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+*.suo
+*.user
+
+# Logs
+*.log
+npm-debug.log*

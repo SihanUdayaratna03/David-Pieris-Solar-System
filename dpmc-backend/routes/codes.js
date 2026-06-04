@@ -6,6 +6,7 @@ const db      = require('../db');
 const insertCode  = db.prepare('INSERT INTO deposit_codes (name, id_number, code) VALUES (?, ?, ?)');
 const selectAll   = db.prepare('SELECT * FROM deposit_codes ORDER BY created_at DESC');
 const selectById  = db.prepare('SELECT * FROM deposit_codes WHERE id = ?');
+const selectByCode = db.prepare('SELECT * FROM deposit_codes WHERE code = ?');
 const deleteById  = db.prepare('DELETE FROM deposit_codes WHERE id = ?');
 
 // ─── POST /api/codes ──────────────────────────────────────────────────────────
@@ -18,6 +19,12 @@ router.post('/', (req, res) => {
   }
 
   try {
+    // Duplicate check: Query existing codes
+    const existing = selectByCode.get(code.trim());
+    if (existing) {
+      return res.status(409).json({ error: `A deposit record with code "${code.trim()}" already exists.` });
+    }
+
     const result = insertCode.run(name.trim(), id_number.trim(), code.trim());
     const saved  = selectById.get(result.lastInsertRowid);
     res.status(201).json(saved);
