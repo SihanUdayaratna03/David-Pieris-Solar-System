@@ -362,7 +362,7 @@ export default function Generate() {
                     id="input-name"
                     type="text"
                     className={`input ${error && !name.trim() ? 'error' : ''}`}
-                    placeholder="e.g. Kamal Perera"
+                    placeholder="Enter depositor full name"
                     value={name}
                     onChange={(e) => { setName(e.target.value); if (error) setError(''); }}
                     disabled={saving}
@@ -377,7 +377,7 @@ export default function Generate() {
                     id="input-id"
                     type="text"
                     className={`input ${error && idNumber.replace(/[^a-zA-Z0-9]/g, '').length < 5 ? 'error' : ''}`}
-                    placeholder="e.g. 200434100891"
+                    placeholder="Enter ID or passport number"
                     value={idNumber}
                     onChange={(e) => { setIdNumber(e.target.value); if (error) setError(''); }}
                     disabled={saving}
@@ -513,9 +513,9 @@ export default function Generate() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredRecords.map((record) => (
+                  {filteredRecords.map((record, index) => (
                     <tr key={record.id} style={{ transition: 'background 0.15s' }}>
-                      <td style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.75rem', fontWeight: 500 }}>{record.id}</td>
+                      <td style={{ color: 'hsl(var(--muted-foreground))', fontSize: '0.75rem', fontWeight: 500 }}>{index + 1}</td>
                       <td style={{ fontWeight: 600 }}>{record.name}
                         <div style={{ fontSize: '0.7rem', color: 'hsl(var(--muted-foreground))', fontWeight: 400, marginTop: '0.1rem', fontFamily: 'monospace' }}>{record.id_number}</div>
                       </td>
